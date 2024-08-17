@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz_app/answer_button.dart';
 import 'package:quiz_app/data/question.dart';
 import 'package:quiz_app/models/quiz_question.dart';
 
 class Question extends StatefulWidget {
-  const Question({super.key});
+  final void Function(String answer) onAddAnswer;
+
+  const Question({super.key, required this.onAddAnswer});
 
   @override
   State<Question> createState() {
@@ -13,10 +16,20 @@ class Question extends StatefulWidget {
 }
 
 class _QuestionState extends State<Question> {
-  final QuizQuestion currentQuestion = questions[0];
+  int currentQuestionIndex = 0;
+
+  void onSelectAnswer(String answer) {
+    setState(() {
+      widget.onAddAnswer(answer);
+      currentQuestionIndex++;
+    });
+  }
 
   @override
   Widget build(context) {
+    final QuizQuestion currentQuestion = questions[
+        currentQuestionIndex]; // Moved to the build method to ensure the question updates with each rebuild.
+
     return SizedBox(
       width: double.infinity, //full-width
       child: Column(
@@ -25,18 +38,22 @@ class _QuestionState extends State<Question> {
         crossAxisAlignment:
             CrossAxisAlignment.stretch, //default is center - horizontally
         children: [
-          Text(
-            textAlign: TextAlign.center,
-            currentQuestion.question,
-            style: const TextStyle(color: Colors.white, fontSize: 22),
-          ),
+          Text(currentQuestion.question,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.outfit(
+                  color: const Color.fromARGB(255, 196, 143, 236),
+                  fontSize: 26)),
           const SizedBox(
             height: 20,
           ),
           ...currentQuestion.getRandomizedAnswers().map((answer) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: AnswerButton(text: answer, onTap: () {}),
+              child: AnswerButton(
+                  text: answer,
+                  onTap: () {
+                    onSelectAnswer(answer);
+                  }),
             );
           })
         ],
