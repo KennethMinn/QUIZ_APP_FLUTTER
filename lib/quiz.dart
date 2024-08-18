@@ -29,12 +29,29 @@ class _QuizState extends State<Quiz> {
     });
   }
 
+  List<Map<String, Object>> getSummary() {
+    final List<Map<String, Object>> summary = []; //Object is a dynamic type
+
+    for (int i = 0; i < selectedAnswers.length; i++) {
+      summary.add({
+        'index': i,
+        'question': questions[i].question,
+        'correct_answer': questions[i].answers[0],
+        'selected_answer': selectedAnswers[i],
+      });
+    }
+
+    return summary;
+  }
+
   void onAddAnswer(String answer) {
     setState(() {
       selectedAnswers.add(answer); //add answre to the array
       if (selectedAnswers.length == questions.length) {
-        selectedAnswers = [];
-        activeScreen = const Result();
+        // selectedAnswers = [];
+        activeScreen = Result(
+          resultSummary: getSummary(),
+        );
       }
     });
   }
