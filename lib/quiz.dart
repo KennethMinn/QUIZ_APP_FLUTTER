@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/data/question.dart';
-import 'package:quiz_app/question.dart';
-import 'package:quiz_app/result.dart';
+import 'package:quiz_app/question_screen.dart';
+import 'package:quiz_app/result_screen.dart';
 import 'package:quiz_app/start_screen.dart';
 
 class Quiz extends StatefulWidget {
-  const Quiz({super.key});
-
   @override
   State<Quiz> createState() {
     return _QuizState();
@@ -17,51 +15,64 @@ class _QuizState extends State<Quiz> {
   Widget? activeScreen;
   List<String> selectedAnswers = [];
 
-  @override //Executed by Flutter when the StatefulWidget's State object is initialized
-  void initState() {
-    activeScreen = StartScreen(switchScreen);
-    super.initState();
-  }
-
-  void switchScreen() {
+  void startQuiz() {
     setState(() {
-      activeScreen = Question(onAddAnswer: onAddAnswer);
+      activeScreen = QustionScreen(onAddAnswer: onAddAnswer);
     });
-  }
-
-  List<Map<String, Object>> getSummary() {
-    final List<Map<String, Object>> summary = []; //Object is a dynamic type
-
-    for (int i = 0; i < selectedAnswers.length; i++) {
-      summary.add({
-        'index': i,
-        'question': questions[i].question,
-        'correct_answer': questions[i].answers[0],
-        'selected_answer': selectedAnswers[i],
-      });
-    }
-
-    return summary;
   }
 
   void onAddAnswer(String answer) {
     setState(() {
-      selectedAnswers.add(answer); //add answre to the array
+      selectedAnswers.add(answer);
+
       if (selectedAnswers.length == questions.length) {
-        // selectedAnswers = [];
-        activeScreen = Result(
-          resultSummary: getSummary(),
+        activeScreen = ResultScreen(
+          result: getResult(),
+          onRestart: onRestart, //immediately invoke to get result
         );
       }
     });
   }
 
+  void onRestart() {
+    setState(() {
+      selectedAnswers = [];
+      activeScreen = StartScreen(
+        startQuiz: startQuiz,
+      );
+    });
+  }
+
+  List<Map<String, Object>> getResult() {
+    final List<Map<String, Object>> result = [];
+
+    for (int i = 0; i < selectedAnswers.length; i++) {
+      result.add({
+        'index': i,
+        'question': questions[i].question,
+        'correct_answer': questions[i].options[0],
+        'selected_answer': selectedAnswers[i]
+      });
+    }
+
+    return result;
+  }
+
   @override
-  Widget build(context) {
-    return MaterialApp(
-      home: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 104, 27, 204),
-          body: Container(child: activeScreen)),
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    activeScreen = StartScreen(
+      startQuiz: startQuiz,
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.purple,
+        child: activeScreen);
   }
 }

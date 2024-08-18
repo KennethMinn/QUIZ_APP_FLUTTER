@@ -1,13 +1,12 @@
 class QuizQuestion {
   final String question;
-  final List<String> answers;
+  final List<String> options;
 
-  const QuizQuestion(this.question, this.answers);
+  const QuizQuestion(this.question, this.options);
 
-  List<String> getRandomizedAnswers() {
-    final List<String> newAnswers = List.of(answers); // copy array of answers
-    newAnswers
-        .shuffle(); //shyffle the origin array, now mutate the newAnswers instead of the original answers
-    return newAnswers;
+  List<String> getShuffledOptions() {
+    final List<String> newOptions = List.of(options);
+    newOptions.shuffle();
+    return newOptions;
   }
 }
