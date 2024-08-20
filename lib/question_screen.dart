@@ -41,7 +41,7 @@ class _QuestionScreenState extends State<QustionScreen> {
                 fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
-          ...currentQuiz.getShuffledOptions().map((answer) {
+          ...currentQuiz.shuffledOptions.map((answer) {
             return ElevatedButton(
                 onPressed: () {
                   onSelectAnswer(answer);

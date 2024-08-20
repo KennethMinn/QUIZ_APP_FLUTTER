@@ -4,7 +4,8 @@ class QuizQuestion {
 
   const QuizQuestion(this.question, this.options);
 
-  List<String> getShuffledOptions() {
+  //getter - if there is no arg/input, use getter - can use like a propertie but overall is a method
+  List<String> get shuffledOptions {
     final List<String> newOptions = List.of(options);
     newOptions.shuffle();
     return newOptions;

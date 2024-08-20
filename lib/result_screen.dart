@@ -11,10 +11,10 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //filter the correct answers
-    final int correctAnswersQty = result.where((item) {
-      return item['correct_answer'] == item['selected_answer'];
-    }).length;
+    //filter the correct answers - must be only one line expression when using arrow func
+    final int correctAnswersQty = result
+        .where((item) => item['correct_answer'] == item['selected_answer'])
+        .length;
 
     final int questionQty = questions.length;
 
